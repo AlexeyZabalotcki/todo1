@@ -50,9 +50,8 @@ export class TestData {
       id: 4,
       title: 'do something 4',
       priority: TestData.priorities[2],
-      completed: false,
+      completed: true,
       category: TestData.categories[5],
-      date: new Date('2022-09-28')
     }, {
       id: 5,
       title: 'do something 5',
@@ -77,8 +76,7 @@ export class TestData {
     }, {
       id: 8,
       title: 'do something 8',
-      priority: TestData.priorities[1],
-      completed: false,
+      completed: true,
       category: TestData.categories[8],
       date: new Date('2022-09-28')
     }, {
@@ -86,7 +84,6 @@ export class TestData {
       title: 'do something 9',
       priority: TestData.priorities[1],
       completed: false,
-      category: TestData.categories[3],
       date: new Date('2022-09-28')
     }, {
       id: 10,
