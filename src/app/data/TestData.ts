@@ -32,102 +32,117 @@ export class TestData {
       completed: false,
       category: TestData.categories[9],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 2,
       title: 'do something 2',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[7],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 3,
       title: 'do something 3',
       priority: TestData.priorities[2],
       completed: false,
       category: TestData.categories[6],
       date: new Date('2022-09-29')
-    }, {
+    },
+    {
       id: 4,
       title: 'do something 4',
       priority: TestData.priorities[2],
       completed: true,
       category: TestData.categories[5],
-    }, {
+    },
+    {
       id: 5,
       title: 'do something 5',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[4],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 6,
       title: 'do something 6',
       priority: TestData.priorities[1],
       completed: false,
       category: TestData.categories[3],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 7,
       title: 'do something 7',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[5],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 8,
       title: 'do something 8',
       completed: true,
       category: TestData.categories[8],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 9,
       title: 'do something 9',
       priority: TestData.priorities[1],
       completed: false,
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 10,
       title: 'do something 10',
       priority: TestData.priorities[1],
       completed: false,
       category: TestData.categories[7],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 11,
       title: 'do something 11',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[2],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 12,
       title: 'do something 12',
       priority: TestData.priorities[2],
       completed: false,
       category: TestData.categories[1],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 13,
       title: 'do something 13',
       priority: TestData.priorities[2],
       completed: false,
       category: TestData.categories[4],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 14,
       title: 'do something 14',
       priority: TestData.priorities[2],
       completed: false,
       category: TestData.categories[6],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 15,
       title: 'do something 15',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[2],
       date: new Date('2022-09-28')
-    }, {
+    },
+    {
       id: 16,
       title: 'do something 16',
       priority: TestData.priorities[1],
@@ -135,6 +150,38 @@ export class TestData {
       category: TestData.categories[1],
       date: new Date('2022-09-28')
     },
+    {
+      id: 17,
+      title: 'do something 17',
+      priority: TestData.priorities[2],
+      completed: false,
+      category: TestData.categories[5],
+      date: new Date('2022-10-04')
+    },
+    {
+      id: 18,
+      title: 'do something 18',
+      priority: TestData.priorities[3],
+      completed: false,
+      category: TestData.categories[2],
+      date: new Date('2022-10-04')
+    },
+    {
+      id: 19,
+      title: 'do something 19',
+      priority: TestData.priorities[2],
+      completed: false,
+      category: TestData.categories[1],
+      date: new Date('2022-10-04')
+    },
+    {
+      id: 20,
+      title: 'do something 20',
+      priority: TestData.priorities[3],
+      completed: false,
+      category: TestData.categories[5],
+      date: new Date('2022-10-04')
+    }
   ]
 
 }
