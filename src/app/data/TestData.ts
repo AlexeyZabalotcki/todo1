@@ -35,7 +35,7 @@ export class TestData {
     }, {
       id: 2,
       title: 'do something 2',
-      priority: TestData.priorities[1],
+      priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[7],
       date: new Date('2022-09-28')
@@ -45,7 +45,7 @@ export class TestData {
       priority: TestData.priorities[2],
       completed: false,
       category: TestData.categories[6],
-      date: new Date('2022-09-28')
+      date: new Date('2022-09-29')
     }, {
       id: 4,
       title: 'do something 4',
