@@ -3,7 +3,7 @@
     <h4 class="card-title">Task List</h4>
   </div>
   <div class="card-body table-responsive">
-    <div class="card-body table-responsive" *ngIf="tasks.length > 0">
+    <div class="card-body table-responsive" *ngIf="tasks && tasks.length > 0">
       <table mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="color">
@@ -22,7 +22,8 @@
 
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-          <td mat-cell class="col-title" *matCellDef="let task" [class.completed]="task.completed">
+          <td mat-cell class="col-title pointer" *matCellDef="let task" [class.completed]="task.completed"
+              (click)="onClickTask(task)">
 
             {{task.title}}
 
@@ -73,7 +74,7 @@
       <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
 
-    <div *ngIf="tasks.length == 0"><p class="not-found">Nothing found</p></div>
+    <div *ngIf="tasks && tasks.length == 0"><p class="not-found">Nothing found</p></div>
 
   </div>
 </div>

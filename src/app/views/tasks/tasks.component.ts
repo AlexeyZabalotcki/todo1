@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {EventEmitter, Component, Input, OnInit, ViewChild, Output} from '@angular/core';
 import {Task} from "../../model/Task";
 import {DataHandlerService} from "../../service/data-handler.service";
 import {MatTableDataSource} from "@angular/material/table";
@@ -11,7 +11,7 @@ import {MatSort} from "@angular/material/sort";
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, AfterViewInit {
+export class TasksComponent implements OnInit {
 
   protected displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
   protected dataSource!: MatTableDataSource<Task>;
@@ -19,18 +19,25 @@ export class TasksComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
 
-  tasks: Task[] = [];
+  protected tasks: Task[] = [];
+
+  @Input('tasks')
+  set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
+    this.fillTable();
+  }
+
+  @Output()
+  updateTask = new EventEmitter<Task>();
 
   constructor(private dataHandler: DataHandlerService) {
   }
 
   ngOnInit() {
-    this.dataHandler.getAllTasks().subscribe((tasks: Task[]) => this.tasks = tasks)
+    //this.dataHandler.getAllTasks().subscribe((tasks: Task[]) => this.tasks = tasks)
 
     this.dataSource = new MatTableDataSource();
-
-    console.log(this.tasks)
-    this.refreshTable();
+    this.fillTable();
   }
 
 
@@ -56,7 +63,11 @@ export class TasksComponent implements OnInit, AfterViewInit {
     return '#fff'
   }
 
-  private refreshTable() {
+  private fillTable() {
+
+    if (!this.dataSource) {
+      return;
+    }
 
     this.dataSource.data = this.tasks;
 
@@ -85,5 +96,9 @@ export class TasksComponent implements OnInit, AfterViewInit {
   private addTableObjects() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  onClickTask(task: Task) {
+    this.updateTask.emit(task);
   }
 }
