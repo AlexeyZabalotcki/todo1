@@ -23,7 +23,7 @@
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
           <td mat-cell class="col-title pointer" *matCellDef="let task" [class.completed]="task.completed"
-              (click)="onClickTask(task)">
+              (click)="openEditTaskDialog(task)">
 
             {{task.title}}
 
