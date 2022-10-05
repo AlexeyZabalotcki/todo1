@@ -55,7 +55,10 @@ export class TaskDAOImpl implements TaskDAO {
     throw new Error("Method not implemented.");
   }
 
-  update(t: Task): Observable<Task> {
-    throw new Error("Method not implemented.");
+  update(task: Task): Observable<Task> {
+    const taskTmp = TestData.tasks.find(t => t.id === task.id);
+    TestData.tasks.splice(TestData.tasks.indexOf(<Task>taskTmp), 1, task);
+
+    return of(task);
   }
 }

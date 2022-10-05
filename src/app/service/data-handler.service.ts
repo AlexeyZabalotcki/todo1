@@ -43,4 +43,8 @@ export class DataHandlerService {
   searchTasks(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
     return this.taskDAOImpl.search(category, searchText, status, priority);
   }
+
+  updateTask(task: Task) {
+    return this.taskDAOImpl.update(task);
+  }
 }
