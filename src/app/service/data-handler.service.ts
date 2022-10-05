@@ -7,6 +7,7 @@ import {TaskDAOImpl} from "../data/dao/impl/TaskDAOImpl";
 import {Observable} from "rxjs";
 import {CategoryDAOImpl} from "../data/dao/impl/CategoryDAOImpl";
 import {Priority} from "../model/Priority";
+import {PriorityDAOImpl} from "../data/dao/impl/PriorityDAOImpl";
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +17,24 @@ export class DataHandlerService {
   taskSubject = new BehaviorSubject<Task[]>(TestData.tasks);
   categorySubject = new BehaviorSubject<Category[]>(TestData.categories)
 
-  private taskDAOImpl = new TaskDAOImpl();
-  private categoryDAOImpl = new CategoryDAOImpl();
+  private taskDaoImpl = new TaskDAOImpl();
+  private categoryDaoImpl = new CategoryDAOImpl();
+  private priorityDaoImpl = new PriorityDAOImpl()
 
   constructor() {
     this.fillTasks()
   }
 
   getAllTasks(): Observable<Task[]> {
-    return this.taskDAOImpl.getAll();
+    return this.taskDaoImpl.getAll();
   }
 
   getAllCategories(): Observable<Category[]> {
-    return this.categoryDAOImpl.getAll();
+    return this.categoryDaoImpl.getAll();
+  }
+
+  getAllPriorities() {
+    return this.priorityDaoImpl.getAll();
   }
 
   fillTasks() {
@@ -41,10 +47,10 @@ export class DataHandlerService {
   }
 
   searchTasks(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
-    return this.taskDAOImpl.search(category, searchText, status, priority);
+    return this.taskDaoImpl.search(category, searchText, status, priority);
   }
 
   updateTask(task: Task) {
-    return this.taskDAOImpl.update(task);
+    return this.taskDaoImpl.update(task);
   }
 }
