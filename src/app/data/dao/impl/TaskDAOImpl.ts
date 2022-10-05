@@ -17,8 +17,18 @@ export class TaskDAOImpl implements TaskDAO {
     return of(TestData.tasks.find(todo => todo.id === id));
   }
 
-  search(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
-    throw new Error("Method not implemented.");
+  search(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
+    return of(this.searchTodos(category, searchText, status, priority));
+  }
+
+  private searchTodos(category: Category, searchText?: string, status?: boolean, priority?: Priority) {
+    let allTasks = TestData.tasks;
+
+    if (category != null) {
+      allTasks = allTasks.filter(todo => todo.category === category);
+    }
+
+    return allTasks;
   }
 
   getCompletedCountInCategory(category: Category): Observable<number> {
@@ -48,5 +58,4 @@ export class TaskDAOImpl implements TaskDAO {
   update(t: Task): Observable<Task> {
     throw new Error("Method not implemented.");
   }
-
 }

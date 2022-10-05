@@ -6,6 +6,7 @@ import {BehaviorSubject} from "rxjs";
 import {TaskDAOImpl} from "../data/dao/impl/TaskDAOImpl";
 import {Observable} from "rxjs";
 import {CategoryDAOImpl} from "../data/dao/impl/CategoryDAOImpl";
+import {Priority} from "../model/Priority";
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,9 @@ export class DataHandlerService {
   fillTasksByCategories(category: Category) {
     const tasks = TestData.tasks.filter(task => task.category === category);
     this.taskSubject.next(tasks);
+  }
+
+  searchTasks(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
+    return this.taskDAOImpl.search(category, searchText, status, priority);
   }
 }
