@@ -50,7 +50,11 @@ export class DataHandlerService {
     return this.taskDaoImpl.search(category, searchText, status, priority);
   }
 
-  updateTask(task: Task) {
+  updateTask(task: Task): Observable<Task> {
     return this.taskDaoImpl.update(task);
+  }
+
+  deleteTask(id: number): Observable<Task> {
+    return this.taskDaoImpl.delete(id);
   }
 }

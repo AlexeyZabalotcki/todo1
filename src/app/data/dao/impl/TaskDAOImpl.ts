@@ -52,7 +52,10 @@ export class TaskDAOImpl implements TaskDAO {
   }
 
   delete(id: number): Observable<Task> {
-    throw new Error("Method not implemented.");
+    const taskTmp = TestData.tasks.find(t => t.id === id);
+    TestData.tasks.splice(TestData.tasks.indexOf(<Task>taskTmp), 1);
+    // @ts-ignore
+    return of(taskTmp);
   }
 
   update(task: Task): Observable<Task> {
