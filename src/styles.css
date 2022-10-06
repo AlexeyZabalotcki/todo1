@@ -1,6 +1,7 @@
 @import "assets/css/material-dashboard.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~bootstrap-css-only/css/bootstrap.min.css";
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 
 html, body {
@@ -44,4 +45,9 @@ body {
   'wght' 400,
   'GRAD' 0,
   'opsz' 48
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
 }
