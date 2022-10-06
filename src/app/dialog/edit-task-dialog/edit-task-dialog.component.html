@@ -16,7 +16,7 @@
     <button mat-button matSuffix mat-icon-button aria-label="clear"
             *ngIf="tmpTitle.trim().length > 0"
 
-            (click)="tmpTitle= ''" class="size25">
+            (click)="tmpTitle= ''" class="size1">
 
       <mat-icon>x</mat-icon>
     </button>
@@ -44,6 +44,30 @@
         {{priority.title}}
       </mat-option>
     </mat-select>
+
+  </mat-form-field>
+
+  <mat-form-field>
+
+    <input
+      matInput placeholder="Enter a deadline" #inputDate
+      readonly="true"
+
+      [matDatepicker]="picker"
+      [(ngModel)]="tmpDate"
+
+      (click)="picker.open()">
+
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+    <mat-datepicker #picker></mat-datepicker>
+
+    <button mat-button matSuffix mat-icon-button aria-labelledby="Close"
+            *ngIf="inputDate.value.trim().length > 0"
+            (click)="tmpDate = null" class="size1">
+
+      <mat-icon>x</mat-icon>
+    </button>
 
   </mat-form-field>
 
