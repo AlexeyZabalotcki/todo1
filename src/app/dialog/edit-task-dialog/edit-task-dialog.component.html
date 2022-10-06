@@ -13,12 +13,12 @@
 
       (keydown.enter)="onConfirm()">
 
-    <button mat-button matSuffix mat-icon-button aria-label="clear"
+    <button mat-button matSuffix mat-icon-button aria-label="Clear"
             *ngIf="tmpTitle.trim().length > 0"
 
             (click)="tmpTitle= ''" class="size1">
 
-      <mat-icon>x</mat-icon>
+      <mat-icon>clear</mat-icon>
     </button>
 
   </mat-form-field>
@@ -62,11 +62,11 @@
 
     <mat-datepicker #picker></mat-datepicker>
 
-    <button mat-button matSuffix mat-icon-button aria-labelledby="Close"
+    <button mat-button matSuffix mat-icon-button aria-labelledby="Clear"
             *ngIf="inputDate.value.trim().length > 0"
             (click)="tmpDate = null" class="size1">
 
-      <mat-icon>x</mat-icon>
+      <mat-icon>clear</mat-icon>
     </button>
 
   </mat-form-field>
