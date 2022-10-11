@@ -45,7 +45,7 @@ export class DataHandlerService {
     this.taskSubject.next(tasks);
   }
 
-  searchTasks(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
+  searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
     return this.taskDaoImpl.search(category, searchText, status, priority);
   }
 
