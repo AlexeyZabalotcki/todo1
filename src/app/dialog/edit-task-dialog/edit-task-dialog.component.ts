@@ -5,6 +5,7 @@ import {Task} from "../../model/Task";
 import {Category} from "../../model/Category";
 import {Priority} from "../../model/Priority";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {OperType} from "src/app/dialog/OperType";
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -12,27 +13,29 @@ import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component
   styleUrls: ['./edit-task-dialog.component.css']
 })
 export class EditTaskDialogComponent implements OnInit {
+  operType: OperType;
 
   constructor(private dialogRef: MatDialogRef<EditTaskDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: [Task, string],
+              @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperType],
               private dataHandler: DataHandlerService,
               private dialog: MatDialog
   ) {
   }
 
-  categories!: Category[];
-  priorities!: Priority[];
+  categories: Category[];
+  priorities: Priority[];
 
-  dialogTitle!: string;
-  task!: Task;
-  tmpTitle!: string;
-  tmpCategory!: Category;
-  tmpPriority!: Priority;
-  tmpDate!: Date | null;
+  dialogTitle: string;
+  task: Task;
+  tmpTitle: string;
+  tmpCategory: Category;
+  tmpPriority: Priority;
+  tmpDate: Date;
 
   ngOnInit(): void {
     this.task = this.data[0];
     this.dialogTitle = this.data[1];
+    this.operType = this.data[2];
 
     this.tmpTitle = this.task.title;
     this.tmpCategory = <Category>this.task.category;
@@ -82,5 +85,13 @@ export class EditTaskDialogComponent implements OnInit {
 
   activate() {
     this.dialogRef.close('activate')
+  }
+
+  canDelete(): boolean {
+    return this.operType === OperType.EDIT;
+  }
+
+  canActiveDesactive(): boolean {
+    return this.operType === OperType.EDIT;
   }
 }

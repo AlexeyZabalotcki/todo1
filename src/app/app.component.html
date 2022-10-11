@@ -1,12 +1,13 @@
 <aside
   class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark">
-  <app-categories (selectCategory)="onSelectCategory($event)"
+  <app-categories
+    (selectCategory)="onSelectCategory($event)"
+    (deleteCategory)="onDeleteCategory($event)"
+    (updateCategory)="onUpdateCategory($event)"
+    (addCategory)="onAddCategory($event)"
 
-                  (deleteCategory)="onDeleteCategory($event)"
-                  (updateCategory)="onUpdateCategory($event)"
-
-                  [selectedCategory]="selectedCategory"
-                  [categories]="categories"></app-categories>
+    [selectedCategory]="selectedCategory"
+    [categories]="categories"></app-categories>
 </aside>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
   <!-- Navbar -->
@@ -139,10 +140,12 @@
         <div class="col-12">
           <app-tasks [tasks]="tasks"
                      [priorities]="priorities"
+                     [selectedCategory]="selectedCategory"
 
                      (updateTask)="onUpdateTask($event)"
                      (deleteTask)="onDeleteTask($event)"
                      (selectCategory)="onSelectCategory($event)"
+                     (addTask)="onAddTask($event)"
 
                      (filterByStatus)="onFilterTaskByStatus($event)"
                      (filterByTitle)="onFilterByTitle($event)"

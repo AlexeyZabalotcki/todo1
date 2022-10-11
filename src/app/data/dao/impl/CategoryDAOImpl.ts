@@ -9,8 +9,14 @@ export class CategoryDAOImpl implements CategoryDAO {
     throw new Error("Method not implemented.");
   }
 
-  add(t: Category): Observable<Category> {
-    throw new Error("Method not implemented.");
+  add(category: Category): Observable<Category> {
+    if (category.id === null || category.id === 0) {
+      category.id = this.getLastIdCategory();
+    }
+
+    TestData.categories.push(category);
+
+    return of(category);
   }
 
   get(id: number): Observable<Category> {
@@ -43,4 +49,7 @@ export class CategoryDAOImpl implements CategoryDAO {
     return of(TestData.categories);
   }
 
+  private getLastIdCategory() {
+    return Math.max.apply(Math, TestData.categories.map(c => c.id)) + 1;
+  }
 }
