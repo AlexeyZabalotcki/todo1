@@ -8,6 +8,7 @@ import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-d
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
 import {Category} from "../../model/Category";
+import {Priority} from "../../model/Priority";
 
 
 @Component({
@@ -25,6 +26,8 @@ export class TasksComponent implements OnInit {
 
   protected tasks: Task[] = [];
 
+  protected priorities: Priority[];
+
   @Output()
   private deleteTask = new EventEmitter<Task>();
 
@@ -34,10 +37,28 @@ export class TasksComponent implements OnInit {
   @Output()
   selectCategory = new EventEmitter<Category>();
 
+  @Output()
+  filterByTitle = new EventEmitter<string>();
+
+  @Output()
+  filterByStatus = new EventEmitter<boolean>();
+
+  @Output()
+  filterByPriority = new EventEmitter<Priority>();
+
+  searchTaskText: string;
+  selectedStatusFilter: boolean = null;
+  selectedPriorityFilter: Priority = null;
+
   @Input('tasks')
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
     this.fillTable();
+  }
+
+  @Input('priorities')
+  set setPriorities(priorities: Priority[]) {
+    this.priorities = priorities;
   }
 
   constructor(private dataHandler: DataHandlerService,
@@ -154,5 +175,24 @@ export class TasksComponent implements OnInit {
 
   onSelectCategory(category: Category) {
     this.selectCategory.emit(category);
+  }
+
+  onFilterByTitle() {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  onFilterByStatus(value: boolean) {
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
+
+  }
+
+  onFilterByPriority(priority: Priority) {
+    if (priority !== this.selectedPriorityFilter) {
+      this.selectedPriorityFilter = priority;
+      this.filterByPriority.emit(this.selectedPriorityFilter);
+    }
   }
 }

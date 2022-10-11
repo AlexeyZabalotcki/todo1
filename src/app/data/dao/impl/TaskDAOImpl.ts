@@ -17,17 +17,31 @@ export class TaskDAOImpl implements TaskDAO {
     return of(TestData.tasks.find(todo => todo.id === id));
   }
 
-  search(category: Category, searchText?: string, status?: boolean, priority?: Priority): Observable<Task[]> {
-    return of(this.searchTodos(category, searchText, status, priority));
+  search(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
+    return of(this.searchTasks(category, searchText, status, priority));
   }
 
-  private searchTodos(category: Category, searchText?: string, status?: boolean, priority?: Priority) {
+  private searchTasks(category: Category, searchText: string, status: boolean, priority: Priority) {
     let allTasks = TestData.tasks;
 
-    if (category != null) {
-      allTasks = allTasks.filter(todo => todo.category === category);
+    if (status != null){
+      allTasks = allTasks.filter(task => task.completed === status);
     }
 
+    if (category != null) {
+      allTasks = allTasks.filter(task => task.category === category);
+    }
+
+    if (priority != null){
+      allTasks = allTasks.filter(task => task.priority === priority)
+    }
+
+    if (searchText != null){
+      allTasks = allTasks.filter(
+        task=>
+          task.title.toUpperCase().includes(searchText.toUpperCase())
+      );
+    }
     return allTasks;
   }
 
