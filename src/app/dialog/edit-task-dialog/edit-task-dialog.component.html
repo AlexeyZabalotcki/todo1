@@ -89,10 +89,10 @@
 
   <div class="col-md-7 col-12 text-right">
 
-    <button mat-button class="green" *ngIf="!task.completed" (click)="complete()">Complete</button>
-    <button mat-button class="green" *ngIf="task.completed" (click)="activate()">Activate</button>
+    <button mat-button class="green" *ngIf="!task.completed" (click)="canActiveDesactive()">Complete</button>
+    <button mat-button class="green" *ngIf="task.completed" (click)="canActiveDesactive()">Activate</button>
 
-    <button mat-button class="red" (click)="delete()">Delete task</button>
+    <button mat-button class="red" *ngIf="canDelete()" (click)="canDelete()">Delete task</button>
   </div>
 
 </mat-dialog-actions>

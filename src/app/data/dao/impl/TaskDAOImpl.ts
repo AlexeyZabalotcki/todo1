@@ -24,7 +24,7 @@ export class TaskDAOImpl implements TaskDAO {
   private searchTasks(category: Category, searchText: string, status: boolean, priority: Priority) {
     let allTasks = TestData.tasks;
 
-    if (status != null){
+    if (status != null) {
       allTasks = allTasks.filter(task => task.completed === status);
     }
 
@@ -32,13 +32,13 @@ export class TaskDAOImpl implements TaskDAO {
       allTasks = allTasks.filter(task => task.category === category);
     }
 
-    if (priority != null){
+    if (priority != null) {
       allTasks = allTasks.filter(task => task.priority === priority)
     }
 
-    if (searchText != null){
+    if (searchText != null) {
       allTasks = allTasks.filter(
-        task=>
+        task =>
           task.title.toUpperCase().includes(searchText.toUpperCase())
       );
     }
@@ -61,8 +61,13 @@ export class TaskDAOImpl implements TaskDAO {
     throw new Error("Method not implemented.");
   }
 
-  add(t: Task): Observable<Task> {
-    throw new Error("Method not implemented.");
+  add(task: Task): Observable<Task> {
+    if (task.id === null || task.id === 0) {
+      task.id = this.getLastIdTask();
+    }
+    TestData.tasks.push(task);
+
+    return of(task);
   }
 
   delete(id: number): Observable<Task> {
@@ -77,5 +82,9 @@ export class TaskDAOImpl implements TaskDAO {
     TestData.tasks.splice(TestData.tasks.indexOf(<Task>taskTmp), 1, task);
 
     return of(task);
+  }
+
+  private getLastIdTask(): number {
+    return Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
   }
 }

@@ -64,4 +64,12 @@ export class DataHandlerService {
   updateCategory(category: Category): Observable<Category> {
     return this.categoryDaoImpl.update(category);
   }
+
+  addTask(task: Task): Observable<Task> {
+    return this.taskDaoImpl.add(task);
+  }
+
+  addCategory(title: string): Observable<Category> {
+    return this.categoryDaoImpl.add(new Category(null, title));
+  }
 }
