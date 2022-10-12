@@ -76,7 +76,8 @@ export class TasksComponent implements OnInit {
     //this.dataHandler.getAllTasks().subscribe((tasks: Task[]) => this.tasks = tasks)
 
     this.dataSource = new MatTableDataSource();
-    this.fillTable();
+    this.onSelectCategory(null);
+
   }
 
 
