@@ -16,7 +16,10 @@
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
          data-scroll="true">
-      <app-header></app-header>
+      <app-header
+        [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
+        (toggleStat)="toggleStat($event)"
+        [showStat]="showStat"></app-header>
     </nav>
     <!-- End Navbar -->
     <div class="content">
@@ -26,9 +29,9 @@
 
           [totalTasksInCategory]="totalTaskCountInCategory"
           [completedTasksInCategory]="completedCountInCategory"
-          [uncompletedTasksInCategory]="uncompletedCountInCategory">
-
-        </app-stat>
+          [uncompletedTasksInCategory]="uncompletedCountInCategory"
+          [showStat]="showStat"
+        ></app-stat>
 
         <div class="row">
 
