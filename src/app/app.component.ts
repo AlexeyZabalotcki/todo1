@@ -3,6 +3,7 @@ import {Task} from "./model/Task";
 import {DataHandlerService} from "./service/data-handler.service";
 import {Category} from "./model/Category";
 import {Priority} from "./model/Priority";
+import {zip} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,17 @@ export class AppComponent implements OnInit {
   priorities: Priority[];
 
   protected selectedCategory: Category = null;
+
   protected searchTaskText = '';
+  private searchCategoryText: string;
+
   protected statusFilter: boolean;
   private priorityFilter: Priority;
-  private searchCategoryText: string;
+
+  totalTaskCountInCategory: number;
+  completedCountInCategory: number;
+  uncompletedCountInCategory: number;
+  uncompletedTotalTaskCount: number;
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -35,19 +43,19 @@ export class AppComponent implements OnInit {
 
     this.selectedCategory = category;
 
-    this.updateTasks();
+    this.updateTasksAndStat();
   }
 
   onUpdateTask(task: Task) {
     this.dataHandler.updateTask(task).subscribe(cat => {
-      this.updateTasks();
+      this.updateTasksAndStat();
     });
   }
 
 
   onDeleteTask(task: Task) {
-    this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.onSelectCategory(this.selectedCategory)
+    this.dataHandler.deleteTask(task.id).subscribe(cat => {
+      this.updateTasksAndStat()
     });
   }
 
@@ -93,7 +101,7 @@ export class AppComponent implements OnInit {
 
   onAddTask(task: Task) {
     this.dataHandler.addTask(task).subscribe(result => {
-      this.updateTasks();
+      this.updateTasksAndStat();
     });
   }
 
@@ -113,5 +121,26 @@ export class AppComponent implements OnInit {
     this.dataHandler.searchCategories(title).subscribe(categories => {
       this.categories = categories;
     });
+  }
+
+  private updateTasksAndStat() {
+    this.updateTasks();
+
+    this.updateStat();
+  }
+
+  private updateStat() {
+    zip(
+      this.dataHandler.getTotalCountInCategory(this.selectedCategory),
+      this.dataHandler.getCompletedCountInCategory(this.selectedCategory),
+      this.dataHandler.getUncompletedCountInCategory(this.selectedCategory),
+      this.dataHandler.getUncompletedTotalCount())
+
+      .subscribe(array => {
+        this.totalTaskCountInCategory = array[0];
+        this.completedCountInCategory = array[1];
+        this.uncompletedCountInCategory = array[2];
+        this.uncompletedTotalTaskCount = array[3];
+      });
   }
 }

@@ -22,7 +22,13 @@
     <div class="content">
       <div class="container-fluid">
 
-        <app-stat></app-stat>
+        <app-stat
+
+          [totalTasksInCategory]="totalTaskCountInCategory"
+          [completedTasksInCategory]="completedCountInCategory"
+          [uncompletedTasksInCategory]="uncompletedCountInCategory">
+
+        </app-stat>
 
         <div class="row">
 
