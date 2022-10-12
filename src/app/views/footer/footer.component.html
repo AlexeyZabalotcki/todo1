@@ -1,0 +1,21 @@
+<footer class="footer">
+  <div class="container-fluid">
+    <nav class="float-left">
+      <ul>
+        <li>
+          <a [href]="site">Our site</a>
+        </li>
+        <li>
+          <a (click)="openAboutDialog()" class="link">About</a>
+        </li>
+        <li>
+          <a [href]="blog">Blog</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="copyright float-right">* Test data reset when page has refreshed&nbsp;&nbsp;
+      © {{year | date: 'yyyy'}}<i class="material-icons">favorite</i>
+      <a [href]="site" target="_blank">{{siteName}}</a>
+    </div>
+  </div>
+</footer>
