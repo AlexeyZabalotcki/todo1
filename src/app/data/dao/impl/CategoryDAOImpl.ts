@@ -22,7 +22,7 @@ export class CategoryDAOImpl implements CategoryDAO {
   }
 
   get(id: number): Observable<Category> {
-    throw new Error("Method not implemented.");
+    return of(TestData.tasks.find(cat => cat.id === id));
   }
 
   delete(id: number): Observable<Category> {

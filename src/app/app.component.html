@@ -8,6 +8,8 @@
       (updateCategory)="onUpdateCategory($event)"
       (addCategory)="onAddCategory($event)"
       (searchCategory)="onSearchCategory($event)"
+      [categoryMap]="categoryMap"
+      [uncompletedTotal]="uncompletedTotalTaskCount"
 
       [selectedCategory]="selectedCategory"
       [categories]="categories"></app-categories>

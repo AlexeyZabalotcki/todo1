@@ -1,7 +1,7 @@
 <div class="sidenav-header">
   <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
      aria-hidden="true"></i>
-  <a class="navbar-brand m-0" href=" https://www.linkedin.com/in/alexey-zabalotcki/" target="_blank">
+  <a class="navbar-brand m-0" target="_blank">
     <img src="../assets/img/drake.jpg" class="add-icon-img">
 
     <span class="nav-title text-white">Categories</span>
@@ -57,6 +57,8 @@
 
         <span class="all-category-title">All</span>
 
+        <span class="uncompleted-count">{{uncompletedTotal}}</span>
+
       </a>
 
     </li>
@@ -66,21 +68,22 @@
     <div *ngIf="categories.length === 0"><p class="not-found">Nothing found</p></div>
 
     <li class="nav-item pointer"
-        (click)="showTasksByCategory(category)"
-        *ngFor="let category of categories; let index = index"
-        [class.active]="category===selectedCategory"
+        (click)="showTasksByCategory(mapValue.key)"
+        *ngFor="let mapValue of selectedCategoryMap | keyvalue; let index = index"
+        [class.active]="mapValue.key === selectedCategory"
 
         (mouseleave)="showEditIcon(null)"
         (mouseenter)="showEditIcon(index)">
       <a class="nav-link">
-        <span class="category-title">{{category.title}}</span>
+        <span class="category-title">{{mapValue.key.title}}</span>
 
         <span class="edit-category-icon-area">
           <mat-icon class="edit-category-icon"
                     *ngIf="indexMouseMove === index"
-                    (click)="$event.stopPropagation(); openEditDialog(category)">
+                    (click)="$event.stopPropagation(); openEditDialog(mapValue.key)">
             edit
           </mat-icon>
+          <span class="category-title">{{mapValue.value}}</span>
         </span>
 
       </a>
