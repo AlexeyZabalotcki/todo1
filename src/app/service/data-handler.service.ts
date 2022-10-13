@@ -92,4 +92,17 @@ export class DataHandlerService {
   getUncompletedTotalCount(): Observable<number> {
     return this.taskDaoImpl.getUncompletedCountInCategory(null);
   }
+
+
+  addPriority(priority: Priority): Observable<Priority> {
+    return this.priorityDaoImpl.add(priority);
+  }
+
+  deletePriority(id: number): Observable<Priority> {
+    return this.priorityDaoImpl.delete(id);
+  }
+
+  updatePriority(priority: Priority): Observable<Priority> {
+    return this.priorityDaoImpl.update(priority);
+  }
 }
