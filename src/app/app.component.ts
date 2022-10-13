@@ -59,6 +59,7 @@ export class AppComponent implements OnInit {
 
     this.dataHandler.searchCategories(title).subscribe(categories => {
       this.categories = categories;
+      this.fillCategories();
     });
   }
 
