@@ -28,7 +28,6 @@ export class CategoryDAOImpl implements CategoryDAO {
   delete(id: number): Observable<Category> {
     TestData.tasks.forEach(task => {
       if (task.category && task.category.id === id) {
-        // @ts-ignore
         task.category = null;
       }
     });
@@ -36,7 +35,6 @@ export class CategoryDAOImpl implements CategoryDAO {
     const tmpCategory = TestData.categories.find(t => t.id === id);
     TestData.categories.splice(TestData.categories.indexOf(<Category>tmpCategory), 1);
 
-    // @ts-ignore
     return of(tmpCategory);
   }
 

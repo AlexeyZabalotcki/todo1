@@ -13,7 +13,6 @@ export class TaskDAOImpl implements TaskDAO {
   }
 
   get(id: number): Observable<Task> {
-    // @ts-ignore
     return of(TestData.tasks.find(todo => todo.id === id));
   }
 
@@ -73,7 +72,6 @@ export class TaskDAOImpl implements TaskDAO {
   delete(id: number): Observable<Task> {
     const taskTmp = TestData.tasks.find(t => t.id === id);
     TestData.tasks.splice(TestData.tasks.indexOf(<Task>taskTmp), 1);
-    // @ts-ignore
     return of(taskTmp);
   }
 
