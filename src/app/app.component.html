@@ -2,17 +2,17 @@
   <aside
     class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3
        bg-gradient-dark">
-    <!--<app-categories
-      (selectCategory)="onSelectCategory($event)"
-      (deleteCategory)="onDeleteCategory($event)"
-      (updateCategory)="onUpdateCategory($event)"
-      (addCategory)="onAddCategory($event)"
-      (searchCategory)="onSearchCategory($event)"
-      [categoryMap]="categoryMap"
-      [uncompletedTotal]="uncompletedTotalTaskCount"
+    <app-categories
+      (selectCategory)="selectCategory($event)"
+      (deleteCategory)="deleteCategory($event)"
+      (updateCategory)="updateCategory($event)"
+      (addCategory)="addCategory($event)"
+      (searchCategory)="searchCategory($event)"
 
+      [categories]="categories"
+      [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll"
       [selectedCategory]="selectedCategory"
-      [categories]="categories"></app-categories>-->
+      [categories]="categories"></app-categories>
   </aside>
   <div class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->

@@ -4,6 +4,8 @@ import {Category} from "./model/Category";
 import {Priority} from "./model/Priority";
 import {zip} from "rxjs";
 import {concatMap, map} from "rxjs/operators";
+import {CategorySearchValues} from "./data/dao/search/SearchObjects";
+import {CategoryService} from "./data/dao/impl/CategoryService";
 
 @Component({
   selector: 'app-root',
@@ -13,59 +15,48 @@ import {concatMap, map} from "rxjs/operators";
 export class AppComponent implements OnInit {
   title = 'todo1';
 
-  categoryMap = new Map<Category, number>();
-
-  tasks: Task[];
   categories: Category[];
-  priorities: Priority[];
 
-  totalTaskCountInCategory: number;
-  completedCountInCategory: number;
-  uncompletedCountInCategory: number;
-  uncompletedTotalTaskCount: number;
+  uncompletedCountForCategoryAll: number;
 
   showStat = true;
 
   protected selectedCategory: Category = null;
 
-  protected searchTaskText = '';
-  private searchCategoryText = '';
-
-  protected statusFilter: boolean;
-  protected priorityFilter: Priority;
-
-  constructor() {
+  constructor(
+    private categoryService: CategoryService
+  ) {
   }
 
   ngOnInit(): void {
     // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities)
     // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories)
 
-    this.fillCategories();
-    this.onSelectCategory(null);
+    this.fillAllCategories();
+    this.selectCategory(null);
   }
 
-  onSelectCategory(category: Category) {
+  selectCategory(category: Category) {
 
     this.selectedCategory = category;
 
     this.updateTasksAndStat();
   }
 
-  onSearchCategory(title: string): void {
+  searchCategory(title: string): void {
 
-    this.searchCategoryText = title;
+    //this.searchCategoryText = title;
 
     // this.dataHandler.searchCategories(title).subscribe(categories => {
     //   this.categories = categories;
-    //   this.fillCategories();
+    //   this.fillAllCategories();
     // });
   }
 
 
   onUpdateTask(task: Task) {
     // this.dataHandler.updateTask(task).subscribe(() => {
-    //   this.fillCategories();
+    //   this.fillAllCategories();
     //
     //   this.updateTasksAndStat();
     // })
@@ -91,11 +82,11 @@ export class AppComponent implements OnInit {
   }
 
   onFilterTaskByStatus(status: boolean) {
-    this.statusFilter = status;
+    //this.statusFilter = status;
     this.updateTasks();
   }
 
-  onDeleteCategory(category: Category) {
+  deleteCategory(category: Category) {
     // this.dataHandler.deleteCategory(category.id).subscribe(cat => {
     //   this.selectedCategory = null;
     //   this.categoryMap.delete(cat)
@@ -104,19 +95,19 @@ export class AppComponent implements OnInit {
     // });
   }
 
-  onUpdateCategory(category: Category): void {
+  updateCategory(category: Category): void {
     // this.dataHandler.updateCategory(category).subscribe(() => {
     //   this.onSearchCategory(this.searchCategoryText);
     // });
   }
 
   onFilterByTitle(searchString: string) {
-    this.searchTaskText = searchString;
+    //this.searchTaskText = searchString;
     this.updateTasks();
   }
 
   onFilterTaskByPriority(priority: Priority) {
-    this.priorityFilter = priority;
+    //this.priorityFilter = priority;
     this.updateTasks();
   }
 
@@ -149,18 +140,24 @@ export class AppComponent implements OnInit {
     // });
   }
 
-  onAddCategory(title: string) {
+  addCategory(title: string) {
     // this.dataHandler.addCategory(title).subscribe(() => {
-    //   this.fillCategories();
+    //   this.fillAllCategories();
     // });
   }
 
-  private fillCategories() {
-    if (this.categoryMap) {
-      this.categoryMap.clear();
-    }
+  private fillAllCategories() {
 
-    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
+    this.categoryService.findAll().subscribe(result => {
+
+      this.categories = result;
+
+    });
+    // if (this.categoryMap) {
+    //   this.categoryMap.clear();
+    // }
+
+    // this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
 
     // this.categories.forEach(cat => {
     //   this.dataHandler.getUncompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count));

@@ -11,22 +11,22 @@ import {OperType} from "../../dialog/OperType";
 })
 export class CategoriesComponent implements OnInit {
 
-  @Input()
-  categories: Category[] = [];
+  categories: Category[];
 
-  @Output()
-  selectCategory = new EventEmitter<Category>();
+  @Input('categories')
+  set setCategories(categories: Category[]) {
+    this.categories = categories;
+  }
+
+  @Input()
+  uncompletedCountForCategoryAll: number;
 
   @Input()
   selectedCategory: Category;
 
-  @Input()
-  uncompletedTotal: number;
 
-  @Input('categoryMap')
-  set setCategoryMap(categoryMap: Map<Category, number>) {
-    this.selectedCategoryMap = categoryMap;
-  }
+  @Output()
+  selectCategory = new EventEmitter<Category>();
 
   @Output()
   deleteCategory = new EventEmitter<Category>();
@@ -40,11 +40,10 @@ export class CategoriesComponent implements OnInit {
   @Output()
   searchCategory = new EventEmitter<string>();
 
-  selectedCategoryMap: Map<Category, number>;
 
   indexMouseMove: number;
-
   searchCategoryTitle: string;
+
 
   constructor(
     private dialog: MatDialog) {
