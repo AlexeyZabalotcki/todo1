@@ -2,7 +2,7 @@
   <aside
     class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3
        bg-gradient-dark">
-    <app-categories
+    <!--<app-categories
       (selectCategory)="onSelectCategory($event)"
       (deleteCategory)="onDeleteCategory($event)"
       (updateCategory)="onUpdateCategory($event)"
@@ -12,33 +12,33 @@
       [uncompletedTotal]="uncompletedTotalTaskCount"
 
       [selectedCategory]="selectedCategory"
-      [categories]="categories"></app-categories>
+      [categories]="categories"></app-categories>-->
   </aside>
   <div class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
          data-scroll="true">
-      <app-header
-        [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
-        (toggleStat)="toggleStat($event)"
-        [showStat]="showStat"></app-header>
+      <!-- <app-header
+         [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
+         (toggleStat)="toggleStat($event)"
+         [showStat]="showStat"></app-header>-->
     </nav>
     <!-- End Navbar -->
     <div class="content">
       <div class="container-fluid">
 
-        <app-stat
+        <!--<app-stat
 
           [totalTasksInCategory]="totalTaskCountInCategory"
           [completedTasksInCategory]="completedCountInCategory"
           [uncompletedTasksInCategory]="uncompletedCountInCategory"
           [showStat]="showStat"
-        ></app-stat>
+        ></app-stat>-->
 
         <div class="row">
 
           <div class="col-12">
-            <app-tasks [tasks]="tasks"
+            <!--<app-tasks [tasks]="tasks"
                        [priorities]="priorities"
                        [selectedCategory]="selectedCategory"
 
@@ -51,7 +51,7 @@
                        (filterByTitle)="onFilterByTitle($event)"
                        (filterByPriority)="onFilterTaskByPriority($event)"
 
-            ></app-tasks>
+            ></app-tasks>-->
 
           </div>
         </div>

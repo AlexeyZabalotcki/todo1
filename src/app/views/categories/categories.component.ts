@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataHandlerService} from "../../service/data-handler.service";
 import {Category} from "../../model/Category";
 import {EditCategoryDialogComponent} from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -47,8 +46,8 @@ export class CategoriesComponent implements OnInit {
 
   searchCategoryTitle: string;
 
-  constructor(private dataHandler: DataHandlerService,
-              private dialog: MatDialog) {
+  constructor(
+    private dialog: MatDialog) {
   }
 
   ngOnInit() {
