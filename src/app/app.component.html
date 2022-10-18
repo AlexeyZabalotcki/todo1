@@ -39,21 +39,24 @@
 
         <div class="row">
 
+          <app-tasks [totalTasksFounded]="totalTasksFounded"
+                     [tasks]="tasks"
+                     [taskSearchValues]="taskSearchValues"
+
+                     (paging)="paging($event)">
+            <!--[priorities]="priorities"
+
+              (updateTask)="onUpdateTask($event)"
+              (deleteTask)="onDeleteTask($event)"
+              (selectCategory)="onSelectCategory($event)"
+              (addTask)="onAddTask($event)"
+
+              (filterByStatus)="onFilterTaskByStatus($event)"
+              (filterByTitle)="onFilterByTitle($event)"
+              (filterByPriority)="onFilterTaskByPriority($event)"-->
+
+          </app-tasks>
           <div class="col-12">
-            <!--<app-tasks [tasks]="tasks"
-                       [priorities]="priorities"
-                       [selectedCategory]="selectedCategory"
-
-                       (updateTask)="onUpdateTask($event)"
-                       (deleteTask)="onDeleteTask($event)"
-                       (selectCategory)="onSelectCategory($event)"
-                       (addTask)="onAddTask($event)"
-
-                       (filterByStatus)="onFilterTaskByStatus($event)"
-                       (filterByTitle)="onFilterByTitle($event)"
-                       (filterByPriority)="onFilterTaskByPriority($event)"
-
-            ></app-tasks>-->
 
           </div>
         </div>

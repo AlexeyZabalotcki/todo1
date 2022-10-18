@@ -36,7 +36,6 @@ export class CategoriesComponent implements OnInit {
   @Output()
   selectCategory = new EventEmitter<Category>();
 
-
   @Output()
   deleteCategory = new EventEmitter<Category>();
 
@@ -73,7 +72,6 @@ export class CategoriesComponent implements OnInit {
   }
 
   search() {
-
     this.filterChanged = false;
 
     if (!this.categorySearchValues) {
@@ -85,9 +83,13 @@ export class CategoriesComponent implements OnInit {
   }
 
   showCategory(category: Category) {
+    if (this.selectedCategory === category) {
+      return;
+    }
 
+    this.selectedCategory = category;
+    this.selectCategory.emit(this.selectedCategory);
   }
-
 
   showEditIcon(show: boolean, index: number) {
     this.indexMouseMove = index;
