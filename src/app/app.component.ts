@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Task} from "./model/Task";
 import {Category} from "./model/Category";
 import {Priority} from "./model/Priority";
-import {zip} from "rxjs";
-import {concatMap, map} from "rxjs/operators";
 import {CategorySearchValues} from "./data/dao/search/SearchObjects";
 import {CategoryService} from "./data/dao/impl/CategoryService";
 
@@ -21,7 +19,9 @@ export class AppComponent implements OnInit {
 
   showStat = true;
 
-  protected selectedCategory: Category = null;
+  selectedCategory: Category = null;
+
+  categorySearchValues = new CategorySearchValues();
 
   constructor(
     private categoryService: CategoryService
@@ -36,23 +36,44 @@ export class AppComponent implements OnInit {
     this.selectCategory(null);
   }
 
+  private fillAllCategories() {
+
+    this.categoryService.findAll().subscribe(result => {
+
+      this.categories = result;
+
+    });
+  }
+
+  searchCategory(categorySearchValues: CategorySearchValues) {
+
+    this.categoryService.findCategories(categorySearchValues).subscribe(result => {
+      this.categories = result;
+    });
+  }
+
+
   selectCategory(category: Category) {
 
-    this.selectedCategory = category;
-
-    this.updateTasksAndStat();
   }
 
-  searchCategory(title: string): void {
-
-    //this.searchCategoryText = title;
-
-    // this.dataHandler.searchCategories(title).subscribe(categories => {
-    //   this.categories = categories;
-    //   this.fillAllCategories();
-    // });
+  addCategory(category: Category) {
+    this.categoryService.add(category).subscribe(result => {
+      this.searchCategory(this.categorySearchValues);
+    });
   }
 
+  deleteCategory(category: Category) {
+    this.categoryService.delete(category.id).subscribe(cat => {
+      this.searchCategory(this.categorySearchValues);
+    });
+  }
+
+  updateCategory(category: Category): void {
+    this.categoryService.update(category).subscribe(() => {
+      this.searchCategory(this.categorySearchValues);
+    });
+  }
 
   onUpdateTask(task: Task) {
     // this.dataHandler.updateTask(task).subscribe(() => {
@@ -84,21 +105,6 @@ export class AppComponent implements OnInit {
   onFilterTaskByStatus(status: boolean) {
     //this.statusFilter = status;
     this.updateTasks();
-  }
-
-  deleteCategory(category: Category) {
-    // this.dataHandler.deleteCategory(category.id).subscribe(cat => {
-    //   this.selectedCategory = null;
-    //   this.categoryMap.delete(cat)
-    //   this.onSearchCategory(this.searchCategoryText);
-    //   this.updateTasks();
-    // });
-  }
-
-  updateCategory(category: Category): void {
-    // this.dataHandler.updateCategory(category).subscribe(() => {
-    //   this.onSearchCategory(this.searchCategoryText);
-    // });
   }
 
   onFilterByTitle(searchString: string) {
@@ -137,30 +143,6 @@ export class AppComponent implements OnInit {
     //   }
     //
     //   this.updateTasksAndStat();
-    // });
-  }
-
-  addCategory(title: string) {
-    // this.dataHandler.addCategory(title).subscribe(() => {
-    //   this.fillAllCategories();
-    // });
-  }
-
-  private fillAllCategories() {
-
-    this.categoryService.findAll().subscribe(result => {
-
-      this.categories = result;
-
-    });
-    // if (this.categoryMap) {
-    //   this.categoryMap.clear();
-    // }
-
-    // this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
-
-    // this.categories.forEach(cat => {
-    //   this.dataHandler.getUncompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count));
     // });
   }
 

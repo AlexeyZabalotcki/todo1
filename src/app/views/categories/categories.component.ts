@@ -3,6 +3,8 @@ import {Category} from "../../model/Category";
 import {EditCategoryDialogComponent} from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {OperType} from "../../dialog/OperType";
+import {CategorySearchValues} from "../../data/dao/search/SearchObjects";
+import {DialogAction} from "../../object/DialogResult";
 
 @Component({
   selector: 'app-categories',
@@ -11,22 +13,29 @@ import {OperType} from "../../dialog/OperType";
 })
 export class CategoriesComponent implements OnInit {
 
-  categories: Category[];
+  @Input('selectedCategory')
+  set setCategory(selectedCategory: Category) {
+    this.selectedCategory = selectedCategory;
+  }
 
   @Input('categories')
   set setCategories(categories: Category[]) {
     this.categories = categories;
   }
 
-  @Input()
-  uncompletedCountForCategoryAll: number;
+  @Input('categorySearchValues')
+  set setCategorySearchValues(categorySearchValues: CategorySearchValues) {
+    this.categorySearchValues = categorySearchValues;
+  }
 
-  @Input()
-  selectedCategory: Category;
-
+  @Input('uncompletedCountForCategoryAll')
+  set uncompletedCount(uncompletedCountForCategoryAll: number) {
+    this.uncompletedCountForCategoryAll = uncompletedCountForCategoryAll;
+  }
 
   @Output()
   selectCategory = new EventEmitter<Category>();
+
 
   @Output()
   deleteCategory = new EventEmitter<Category>();
@@ -35,14 +44,25 @@ export class CategoriesComponent implements OnInit {
   updateCategory = new EventEmitter<Category>();
 
   @Output()
-  addCategory = new EventEmitter<string>();
+  addCategory = new EventEmitter<Category>();
 
   @Output()
-  searchCategory = new EventEmitter<string>();
+  searchCategory = new EventEmitter<CategorySearchValues>();
 
+  selectedCategory;
 
   indexMouseMove: number;
-  searchCategoryTitle: string;
+  showEditIconCategory: boolean;
+
+  categories: Category[];
+
+  categorySearchValues: CategorySearchValues;
+
+  uncompletedCountForCategoryAll: number;
+
+  filterTitle: string;
+
+  filterChanged: boolean;
 
 
   constructor(
@@ -50,66 +70,79 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories)
   }
 
-  showTasksByCategory(category: Category | null): void {
+  search() {
 
-    if (this.selectedCategory === category) {
+    this.filterChanged = false;
+
+    if (!this.categorySearchValues) {
       return;
     }
 
-    this.selectedCategory = <Category>category;
-
-    this.selectCategory.emit(this.selectedCategory);
+    this.categorySearchValues.title = this.filterTitle;
+    this.searchCategory.emit(this.categorySearchValues);
   }
 
-  showEditIcon(index: number | null) {
-    this.indexMouseMove = <number>index;
+  showCategory(category: Category) {
+
   }
 
+
+  showEditIcon(show: boolean, index: number) {
+    this.indexMouseMove = index;
+    this.showEditIconCategory = show;
+  }
+
+  clearAndSearch() {
+    this.filterTitle = null;
+    this.search();
+  }
+
+  checkFilterChanged() {
+    this.filterChanged = false;
+    if (this.filterTitle !== this.categorySearchValues.title) {
+      this.filterChanged = true;
+    }
+
+    return this.filterChanged;
+  }
+
+  openAddDialog() {
+    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
+      data: [new Category(null, ''), 'Add category'],
+      width: '400'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!(result)) {
+        return;
+      }
+      if (result.action === DialogAction.SAVE) {
+        this.addCategory.emit(result.obj as Category);
+      }
+    });
+  }
 
   openEditDialog(category: Category) {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      data: [category.title, 'Edit category', OperType.EDIT],
+      data: [new Category(category.id, category.title), 'Edit category', OperType.EDIT],
       width: '400px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
 
-      if (result === 'delete') {
+      if (!(result)) {
+        return;
+      }
+      if (result.action === DialogAction.DELETE) {
         this.deleteCategory.emit(category);
-
         return;
       }
-
-      if (typeof (result) === 'string') {
-        category.title = result as string;
-
-        this.updateCategory.emit(category);
+      if (result.action === DialogAction.SAVE) {
+        this.updateCategory.emit(result.obj as Category);
         return;
-        ;
       }
     });
-  }
-
-  openAddDialog() {
-    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      data: ['', 'Add category', OperType.ADD],
-      width: '400'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.addCategory.emit(result as string)
-      }
-    });
-  }
-
-  search() {
-    if (this.searchCategoryTitle == null) {
-      return;
-    }
-    this.searchCategory.emit(this.searchCategoryTitle);
   }
 }

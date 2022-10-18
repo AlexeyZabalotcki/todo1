@@ -3,16 +3,18 @@
     class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3
        bg-gradient-dark">
     <app-categories
-      (selectCategory)="selectCategory($event)"
-      (deleteCategory)="deleteCategory($event)"
-      (updateCategory)="updateCategory($event)"
       (addCategory)="addCategory($event)"
+      (deleteCategory)="deleteCategory($event)"
       (searchCategory)="searchCategory($event)"
+      (selectCategory)="selectCategory($event)"
+      (updateCategory)="updateCategory($event)"
 
       [categories]="categories"
-      [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll"
       [selectedCategory]="selectedCategory"
-      [categories]="categories"></app-categories>
+      [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll"
+      [categorySearchValues]="categorySearchValues"
+
+    ></app-categories>
   </aside>
   <div class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->

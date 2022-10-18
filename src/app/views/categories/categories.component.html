@@ -23,41 +23,47 @@
 
         <input
 
-          #inputSearchCategory
-
-          (keydown.escape)="searchCategoryTitle= ''; search();"
-          (keyup)="search();"
-          [(ngModel)]="searchCategoryTitle"
+          [(ngModel)]="filterTitle"
+          (ngModelChange)="this.checkFilterChanged()"
+          (keydown.escape)="clearAndSearch()"
 
           matInput
           maxlength="256"
           placeholder="Search categories"
-        >
+        />
+
+        <button
+          *ngIf="filterTitle && filterTitle.trim().length > 0"
+          mat-button matSuffix mat-icon-button
+          aria-label="Clear"
+
+          class="search-category-button"
+
+          (click)="clearAndSearch()">
+
+          <mat-icon>clear</mat-icon>
+        </button>
 
         <button
 
-          (click)="searchCategoryTitle = ''; search()"
-          *ngIf="inputSearchCategory.value.trim().length > 0" aria-label="Clear"
-          class="search-category-button size1 gray"
+          (click)="search()"
+          *ngIf="filterTitle && filterTitle.trim().length > 0"
+          mat-button matSuffix mat-icon-button
 
-          mat-button
-
-          mat-icon-button
-
-          matSuffix
+          [ngClass]="{'blink-button': filterChanged}"
         >
-          <mat-icon>clear</mat-icon>
+          <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
     </div>
 
-    <li class="nav-item category" (click)="showTasksByCategory(null)" [class.active]="selectedCategory === null">
+    <li class="nav-item category" [class.active]="selectedCategory === null">
 
       <a class="nav-link pointer">
 
         <span class="all-category-title">All</span>
 
-        <span class="uncompleted-count">{{uncompletedCountForCategoryAll}}</span>
+        <span class="uncompleted-count">{{uncompletedCountForCategoryAll || 0}}</span>
 
       </a>
 
@@ -68,18 +74,20 @@
     <div *ngIf="categories && categories.length === 0"><p class="not-found">Nothing found</p></div>
 
     <li class="nav-item pointer"
-        (click)="showTasksByCategory(category)"
+        (click)="showCategory(category)"
         *ngFor="let category of categories; let index = index"
-        [class.active]="category === selectedCategory"
+        [class.active]="(selectedCategory && category) && category.id === selectedCategory.id"
 
-        (mouseleave)="showEditIcon(null)"
-        (mouseenter)="showEditIcon(index)">
+        (mouseleave)="showEditIcon(false, index)"
+        (mouseenter)="showEditIcon(true, index)">
+
       <a class="nav-link">
         <span class="category-title">{{category.title}}</span>
 
         <span class="edit-category-icon-area">
+
           <mat-icon class="edit-category-icon"
-                    *ngIf="indexMouseMove === index"
+                    *ngIf="(showEditIcon && index == indexMouseMove)"
                     (click)="$event.stopPropagation(); openEditDialog(category)">
             edit
           </mat-icon>

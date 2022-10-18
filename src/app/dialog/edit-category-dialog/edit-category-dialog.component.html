@@ -10,16 +10,16 @@
 
       matInput maxlength="15"
 
-      [(ngModel)]="categoryTitle"
-      (keydown.enter)="onConfirm()"/>
+      [(ngModel)]="category.title"
+      (keydown.enter)="confirm()"/>
 
     <button
-      *ngIf="categoryTitle.trim().length > 0"
+      *ngIf="category.title.trim().length > 0"
 
       class="clear-icon size1"
       mat-button matSuffix mat-icon-button aria-label="Clear"
 
-      (click)="categoryTitle= ''">
+      (click)="category.title= ''">
 
       <mat-icon>clear</mat-icon>
     </button>
@@ -32,15 +32,15 @@
 
       <button
         mat-raised-button color="primary"
-        (click)="onConfirm()"
+        (click)="confirm()"
         [disabled]="inputTitle.value.trim().length==0">
         Save
       </button>
 
-      <button mat-raised-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button (click)="cancel()">Cancel</button>
 
       <button
-        *ngIf="canDelete()"
+        *ngIf="canDelete"
         mat-button
         (click)="delete()" class="red">
         Delete
