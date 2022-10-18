@@ -57,7 +57,8 @@
       </mat-form-field>
     </div>
 
-    <li class="nav-item category" [class.active]="selectedCategory === null">
+    <li class="nav-item category" [class.active]="selectedCategory === null"
+        (click)="showCategory(null)">
 
       <a class="nav-link pointer">
 
@@ -71,15 +72,19 @@
 
     <div class="line"></div>
 
-    <div *ngIf="categories && categories.length === 0"><p class="not-found">Nothing found</p></div>
+    <div *ngIf="!categories || categories.length === 0"><p class="not-found">Nothing found</p></div>
 
     <li class="nav-item pointer"
-        (click)="showCategory(category)"
-        *ngFor="let category of categories; let index = index"
+        *ngFor="let category of categories, let index = index"
+
+
         [class.active]="(selectedCategory && category) && category.id === selectedCategory.id"
 
+        (click)="showCategory(category)"
         (mouseleave)="showEditIcon(false, index)"
-        (mouseenter)="showEditIcon(true, index)">
+        (mouseenter)="showEditIcon(true, index)"
+
+    >
 
       <a class="nav-link">
         <span class="category-title">{{category.title}}</span>

@@ -2,8 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {Task} from "./model/Task";
 import {Category} from "./model/Category";
 import {Priority} from "./model/Priority";
-import {CategorySearchValues} from "./data/dao/search/SearchObjects";
+import {CategorySearchValues, TaskSearchValues} from "./data/dao/search/SearchObjects";
 import {CategoryService} from "./data/dao/impl/CategoryService";
+import {TaskService} from "./data/dao/impl/TaskService";
+import {MatDialog} from "@angular/material/dialog";
+import {Observable} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-root',
@@ -11,9 +15,11 @@ import {CategoryService} from "./data/dao/impl/CategoryService";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   title = 'todo1';
 
   categories: Category[];
+  tasks: Task[];
 
   uncompletedCountForCategoryAll: number;
 
@@ -21,10 +27,15 @@ export class AppComponent implements OnInit {
 
   selectedCategory: Category = null;
 
+  totalTasksFounded: number;
+
   categorySearchValues = new CategorySearchValues();
+  taskSearchValues = new TaskSearchValues();
 
   constructor(
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private taskService: TaskService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -32,17 +43,14 @@ export class AppComponent implements OnInit {
     // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities)
     // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories)
 
-    this.fillAllCategories();
-    this.selectCategory(null);
+    this.fillAllCategories().subscribe(res => {
+      this.categories = res;
+      this.selectCategory(this.selectedCategory);
+    });
   }
 
-  private fillAllCategories() {
-
-    this.categoryService.findAll().subscribe(result => {
-
-      this.categories = result;
-
-    });
+  private fillAllCategories(): Observable<Category[]> {
+    return this.categoryService.findAll();
   }
 
   searchCategory(categorySearchValues: CategorySearchValues) {
@@ -55,6 +63,25 @@ export class AppComponent implements OnInit {
 
   selectCategory(category: Category) {
 
+    this.taskSearchValues.pageNumber = 0;
+
+    this.selectedCategory = category;
+
+    this.taskSearchValues.categoryId = category ? category.id : null;
+
+    this.searchTasks(this.taskSearchValues);
+
+
+  }
+
+  private searchTasks(searchTaskValues: TaskSearchValues) {
+
+    this.taskSearchValues = searchTaskValues;
+
+    this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
+      this.tasks = result.content;
+      this.totalTasksFounded = result.totalElements;
+    })
   }
 
   addCategory(category: Category) {
@@ -66,12 +93,14 @@ export class AppComponent implements OnInit {
   deleteCategory(category: Category) {
     this.categoryService.delete(category.id).subscribe(cat => {
       this.searchCategory(this.categorySearchValues);
+      this.selectCategory(this.selectedCategory);
     });
   }
 
   updateCategory(category: Category): void {
     this.categoryService.update(category).subscribe(() => {
       this.searchCategory(this.categorySearchValues);
+      this.searchTasks(this.taskSearchValues);
     });
   }
 
@@ -169,5 +198,20 @@ export class AppComponent implements OnInit {
 
   toggleStat(showStat: boolean) {
     this.showStat = showStat;
+  }
+
+  paging(pageEvent: PageEvent) {
+
+    if (this.taskSearchValues.pageSize !== pageEvent.pageSize) {
+      this.taskSearchValues.pageNumber = 0;
+    } else {
+      this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+    }
+
+    this.taskSearchValues.pageSize = pageEvent.pageSize;
+    this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+
+    this.searchTasks(this.taskSearchValues);
+
   }
 }
