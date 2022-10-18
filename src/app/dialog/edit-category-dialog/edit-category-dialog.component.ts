@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
-import {OperType} from "src/app/dialog/OperType";
+import {Category} from "../../model/Category";
+import {DialogAction, DialogResult} from "../../object/DialogResult";
 
 @Component({
   selector: 'app-edit-category-dialog',
@@ -9,32 +10,30 @@ import {OperType} from "src/app/dialog/OperType";
   styleUrls: ['./edit-category-dialog.component.css']
 })
 export class EditCategoryDialogComponent implements OnInit {
-  dialogTitle!: string;
-  categoryTitle!: string;
-  //canDelete = true;
-  operType: OperType;
+  dialogTitle: string;
+  category: Category;
+  canDelete = true;
 
   constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: [string, string, OperType],
+              @Inject(MAT_DIALOG_DATA) private data: [Category, string],
               private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.categoryTitle = this.data[0];
+    this.category = this.data[0];
     this.dialogTitle = this.data[1];
-    this.operType = this.data[2];
 
-    /*if (!this.categoryTitle) {
-      this.canDelete = false;
-    }*/
+    if (this.category && this.category.id && this.category.id > 0) {
+      this.canDelete = true;
+    }
   }
 
-  onConfirm() {
-    this.dialogRef.close(this.categoryTitle);
+  confirm() {
+    this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.category));
   }
 
-  onCancel() {
-    this.dialogRef.close(false);
+  cancel() {
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
   }
 
   delete() {
@@ -47,13 +46,12 @@ export class EditCategoryDialogComponent implements OnInit {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dialogRef.close('delete')
+      if (!(result)) {
+        return;
+      }
+      if (result.action === DialogAction.OK) {
+        this.dialogRef.close(new DialogResult(DialogAction.DELETE));
       }
     });
-  }
-
-  canDelete(): boolean {
-    return this.operType === OperType.EDIT;
   }
 }
