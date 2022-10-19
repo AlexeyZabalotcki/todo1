@@ -66,7 +66,7 @@
     <mat-form-field>
       <mat-select [(ngModel)]="filterPriorityId" (selectionChange)="checkFilterChanged()"
                   placeholder="Priority filter">
-        <mat-option [value]="null">Все приоритеты</mat-option>
+        <mat-option [value]="null">All priorities</mat-option>
         <mat-option *ngFor="let priority of priorities" [value]="priority.id">{{priority.title}}</mat-option>
 
       </mat-select>
@@ -118,7 +118,6 @@
 
 
     <span>Sorting: </span>
-
     <button
 
       matSuffix mat-icon-button mat-button

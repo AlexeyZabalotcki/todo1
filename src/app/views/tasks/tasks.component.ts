@@ -7,6 +7,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {Category} from "../../model/Category";
 import {Priority} from "../../model/Priority";
 import {TaskSearchValues} from "../../data/dao/search/SearchObjects";
+import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
+import {DialogAction} from "../../object/DialogResult";
+import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
 
 
 @Component({
@@ -36,6 +39,11 @@ export class TasksComponent implements OnInit {
   @Input('priorities')
   set setPriorities(priorities: Priority[]) {
     this.priorities = priorities;
+  }
+
+  @Input('categories')
+  set setCategories(categories: Category[]) {
+    this.categories = categories;
   }
 
   @Input()
@@ -72,7 +80,7 @@ export class TasksComponent implements OnInit {
   toggleSearch = new EventEmitter<boolean>();
 
   tasks: Task[] = [];
-
+  categories: Category[];
   priorities: Priority[];
 
   searchTaskText: string;
@@ -128,22 +136,99 @@ export class TasksComponent implements OnInit {
 
   openAddDialog() {
 
+    const task = new Task(null, '', 0, null, this.selectedCategory);
+
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+
+      data: [task, 'Add task', this.categories, this.priorities]
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (!(result)) {
+        return;
+      }
+
+      if (result.action === DialogAction.SAVE) {
+        this.addTask.emit(task);
+      }
+    });
 
   }
 
   openEditDialog(task: Task): void {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [task, 'Edit task', this.categories, this.priorities],
+      autoFocus: false
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+
+
+      if (!(result)) {
+        return;
+      }
+
+
+      if (result.action === DialogAction.DELETE) {
+        this.deleteTask.emit(task);
+        return;
+      }
+
+      if (result.action === DialogAction.COMPLETE) {
+        task.completed = 1;
+        this.updateTask.emit(task);
+      }
+
+
+      if (result.action === DialogAction.ACTIVATE) {
+        task.completed = 0;
+        this.updateTask.emit(task);
+        return;
+      }
+
+      if (result.action === DialogAction.SAVE) {
+        this.updateTask.emit(task);
+        return;
+      }
+
+
+    });
 
   }
 
 
   openDeleteDialog(task: Task) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {dialogTitle: 'Confirm action', message: `Do you really want to delete the task?`},
+      autoFocus: false
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+
+
+      if (!(result)) {
+        return;
+      }
+
+
+      if (result.action === DialogAction.OK) {
+        this.deleteTask.emit(task);
+      }
+    });
   }
 
 
   onToggleCompleted(task: Task) {
 
+    if (task.completed === 0) {
+      task.completed = 1;
+    } else {
+      task.completed = 0;
+    }
+
+    this.updateTask.emit(task);
 
   }
 
