@@ -9,6 +9,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {Observable} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {PriorityService} from "./data/dao/impl/PriorityService";
+import {StatService} from "./data/dao/impl/StatService";
+import {Stat} from "./model/Stat";
+import {DashboardData} from "./object/DashboardData";
 
 @Component({
   selector: 'app-root',
@@ -23,36 +26,55 @@ export class AppComponent implements OnInit {
   tasks: Task[];
   priorities: Priority[];
 
-  uncompletedCountForCategoryAll: number;
-
   showStat = true;
+  showSearch = true;
 
   selectedCategory: Category = null;
+
+  uncompletedCountForCategoryAll: number;
 
   totalTasksFounded: number;
 
   categorySearchValues = new CategorySearchValues();
   taskSearchValues = new TaskSearchValues();
 
-  showSearch: boolean;
+  stat: Stat;
+  dash: DashboardData = new DashboardData();
 
   constructor(
     private categoryService: CategoryService,
     private taskService: TaskService,
     private priorityService: PriorityService,
+    private statService: StatService,
     private dialog: MatDialog
   ) {
+    this.statService.getOverallStat().subscribe((result => {     // сначала получаем данные статистики
+      this.stat = result;
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;
+
+      this.fillAllCategories().subscribe(res => {
+        this.categories = res;
+
+        this.selectCategory(this.selectedCategory);
+
+      });
+
+
+    }));
   }
 
   ngOnInit(): void {
+    this.fillAllPriorities();
 
-    this.fillAllCategories().subscribe(res => {
-      this.categories = res;
-      this.selectCategory(this.selectedCategory);
-    });
+
   }
 
-  private fillAllCategories(): Observable<Category[]> {
+  fillDashData(completedCount: number, uncompletedCount: number) {
+    this.dash.completedTotal = completedCount;
+    this.dash.uncompletedTotal = uncompletedCount;
+  }
+
+  fillAllCategories(): Observable<Category[]> {
     return this.categoryService.findAll();
   }
 
@@ -119,22 +141,40 @@ export class AppComponent implements OnInit {
   addTask(task: Task) {
     this.taskService.add(task).subscribe(result => {
 
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+      this.updateOverallCounter();
       this.searchTasks(this.taskSearchValues);
 
     });
+
   }
 
   deleteTask(task: Task) {
     this.taskService.delete(task.id).subscribe(result => {
 
-      this.searchTasks(this.taskSearchValues);
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
 
+      this.updateOverallCounter();
+      this.searchTasks(this.taskSearchValues);
     });
   }
 
   updateTask(task: Task) {
     this.taskService.update(task).subscribe(result => {
 
+      if (task.oldCategory) {
+        this.updateCategoryCounter(task.oldCategory);
+      }
+
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+
+      this.updateOverallCounter();
       this.searchTasks(this.taskSearchValues);
 
     });
@@ -163,5 +203,39 @@ export class AppComponent implements OnInit {
 
   toggleSearch(showSearch: boolean) {
     this.showSearch = showSearch;
+  }
+
+  private updateCategoryCounter(category: Category) {
+    this.categoryService.findById(category.id).subscribe(cat => {
+
+      this.categories[this.getCategoryIndex(category)] = cat;
+
+      this.showCategoryDashboard(cat);
+
+    });
+  }
+
+  private updateOverallCounter() {
+    this.statService.getOverallStat().subscribe((res => {
+      this.stat = res;
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;
+
+      if (!this.selectedCategory) {
+        this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal);
+      }
+
+    }));
+  }
+
+  private getCategoryIndex(category: Category): number {
+    const tmpCategory = this.categories.find(t => t.id === category.id);
+    return this.categories.indexOf(tmpCategory);
+  }
+
+
+  private showCategoryDashboard(cat: Category) {
+    if (this.selectedCategory && this.selectedCategory.id === cat.id) {
+      this.fillDashData(cat.completedCount, cat.uncompletedCount);
+    }
   }
 }

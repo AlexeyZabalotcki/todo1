@@ -34,6 +34,8 @@ export class TasksComponent implements OnInit {
   @Input('taskSearchValues')
   set setTaskSearchValues(taskSearchValues: TaskSearchValues) {
     this.taskSearchValues = taskSearchValues;
+    this.initSearchValues();
+    this.initSortDirectionIcon()
   }
 
   @Input('priorities')
@@ -82,12 +84,6 @@ export class TasksComponent implements OnInit {
   tasks: Task[] = [];
   categories: Category[];
   priorities: Priority[];
-
-  searchTaskText: string;
-
-  selectedStatusFilter: boolean = null;
-
-  selectedPriorityFilter: Priority = null;
 
   taskSearchValues: TaskSearchValues;
 
@@ -247,15 +243,6 @@ export class TasksComponent implements OnInit {
 
   }
 
-  getPriorityBgColor(task: Task) {
-
-    if (task.priority != null && !task.completed) {
-      return task.priority.color;
-    }
-
-    return 'none';
-  }
-
   pageChanged(pageEvent: PageEvent) {
     this.paging.emit(pageEvent);
   }
@@ -304,7 +291,7 @@ export class TasksComponent implements OnInit {
     this.initSortDirectionIcon();
   }
 
-  private initSortDirectionIcon() {
+  initSortDirectionIcon() {
     if (this.filterSortDirection === 'desc') {
       this.sortIconName = this.iconNameDown;
     } else {
@@ -330,5 +317,16 @@ export class TasksComponent implements OnInit {
     this.filterPriorityId = null;
     this.filterSortColumn = this.defaultSortColumn;
     this.filterSortDirection = this.defaultSortDirection;
+  }
+
+  initSearchValues() {
+    if (!this.taskSearchValues) {
+      return;
+    }
+    this.filterTitle = this.taskSearchValues.title;
+    this.filterCompleted = this.taskSearchValues.completed;
+    this.filterPriorityId = this.taskSearchValues.priorityId;
+    this.filterSortColumn = this.taskSearchValues.sortColumn;
+    this.filterSortDirection = this.taskSearchValues.sortDirection;
   }
 }
