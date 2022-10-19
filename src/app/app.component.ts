@@ -45,8 +45,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities)
-    // this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories)
 
     this.fillAllCategories().subscribe(res => {
       this.categories = res;
@@ -78,7 +76,6 @@ export class AppComponent implements OnInit {
 
     this.searchTasks(this.taskSearchValues);
 
-
   }
 
   searchTasks(searchTaskValues: TaskSearchValues) {
@@ -105,6 +102,8 @@ export class AppComponent implements OnInit {
 
   deleteCategory(category: Category) {
     this.categoryService.delete(category.id).subscribe(cat => {
+      this.selectedCategory = null;
+
       this.searchCategory(this.categorySearchValues);
       this.selectCategory(this.selectedCategory);
     });
@@ -117,100 +116,28 @@ export class AppComponent implements OnInit {
     });
   }
 
-  updateTask(task: Task) {
-    // this.dataHandler.updateTask(task).subscribe(() => {
-    //   this.fillAllCategories();
-    //
-    //   this.updateTasksAndStat();
-    // })
+  addTask(task: Task) {
+    this.taskService.add(task).subscribe(result => {
+
+      this.searchTasks(this.taskSearchValues);
+
+    });
   }
 
   deleteTask(task: Task) {
-    // this.dataHandler.deleteTask(task.id).pipe(
-    //   concatMap(task => {
-    //       return this.dataHandler.getUncompletedCountInCategory(task.category).pipe(map(count => {
-    //         return ({t: task, count});
-    //       }));
-    //     }
-    //   )).subscribe(result => {
-    //   const t = result.t as Task;
-    //   this.categoryMap.set(t.category, result.count);
-    //
-    //   if (t.category) {
-    //     this.categoryMap.set(t.category, result.count)
-    //   }
-    //
-    //   this.updateTasksAndStat();
-    // });
+    this.taskService.delete(task.id).subscribe(result => {
+
+      this.searchTasks(this.taskSearchValues);
+
+    });
   }
 
-  onFilterTaskByStatus(status: boolean) {
-    //this.statusFilter = status;
-    this.updateTasks();
-  }
+  updateTask(task: Task) {
+    this.taskService.update(task).subscribe(result => {
 
-  onFilterByTitle(searchString: string) {
-    //this.searchTaskText = searchString;
-    this.updateTasks();
-  }
+      this.searchTasks(this.taskSearchValues);
 
-  onFilterTaskByPriority(priority: Priority) {
-    //this.priorityFilter = priority;
-    this.updateTasks();
-  }
-
-  private updateTasks() {
-    // this.dataHandler.searchTasks(
-    //   this.selectedCategory,
-    //   this.searchTaskText,
-    //   this.statusFilter,
-    //   this.priorityFilter
-    // ).subscribe((tasks: Task[]) => {
-    //   this.tasks = tasks;
-    // });
-  }
-
-  addTask(task: Task) {
-    // this.dataHandler.addTask(task).pipe(
-    //   concatMap(task => {
-    //       return this.dataHandler.getUncompletedCountInCategory(task.category).pipe(map(count => {
-    //         return ({t: task, count});
-    //       }));
-    //     }
-    //   )).subscribe(result => {
-    //   const t = result.t as Task;
-    //
-    //   if (t.category) {
-    //     this.categoryMap.set(t.category, result.count);
-    //   }
-    //
-    //   this.updateTasksAndStat();
-    // });
-  }
-
-  private updateTasksAndStat() {
-    this.updateTasks();
-
-    this.updateStat();
-  }
-
-  private updateStat() {
-    // zip(
-    //   this.dataHandler.getTotalCountInCategory(this.selectedCategory),
-    //   this.dataHandler.getCompletedCountInCategory(this.selectedCategory),
-    //   this.dataHandler.getUncompletedCountInCategory(this.selectedCategory),
-    //   this.dataHandler.getUncompletedTotalCount())
-    //
-    //   .subscribe(array => {
-    //     this.totalTaskCountInCategory = array[0];
-    //     this.completedCountInCategory = array[1];
-    //     this.uncompletedCountInCategory = array[2];
-    //     this.uncompletedTotalTaskCount = array[3];
-    //   });
-  }
-
-  toggleStat(showStat: boolean) {
-    this.showStat = showStat;
+    });
   }
 
   paging(pageEvent: PageEvent) {
