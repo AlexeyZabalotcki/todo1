@@ -19,6 +19,9 @@ export class TasksComponent implements OnInit {
   @Input()
   totalTasksFounded: number;
 
+  @Input()
+  showSearch: boolean;
+
   @Input('tasks')
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
@@ -65,6 +68,9 @@ export class TasksComponent implements OnInit {
   @Output()
   filterByPriority = new EventEmitter<Priority>();
 
+  @Output()
+  toggleSearch = new EventEmitter<boolean>();
+
   tasks: Task[] = [];
 
   priorities: Priority[];
@@ -78,14 +84,30 @@ export class TasksComponent implements OnInit {
   taskSearchValues: TaskSearchValues;
 
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
-  dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
 
+  dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
 
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
 
+  changed = false;
+
+  sortIconName: string;
+
+  readonly iconNameDown = 'arrow_downward';
+  readonly iconNameUp = 'arrow_upward';
+
   readonly colorCompletedTask = '#F8F9FA';
   readonly colorWhite = '#fff';
+
+  readonly defaultSortColumn = 'title';
+  readonly defaultSortDirection = 'asc';
+
+  filterTitle: string;
+  filterCompleted: number;
+  filterPriorityId: number;
+  filterSortColumn: string;
+  filterSortDirection: string;
 
   constructor(
     private dialog: MatDialog) {
@@ -157,4 +179,71 @@ export class TasksComponent implements OnInit {
 
   }
 
+  onToggleSearch() {
+    this.toggleSearch.emit(!this.showSearch);
+  }
+
+  checkFilterChanged() {
+    this.changed = false;
+
+    if (this.taskSearchValues.title !== this.filterTitle) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.completed !== this.filterCompleted) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.priorityId !== this.filterPriorityId) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.sortColumn !== this.filterSortColumn) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.sortDirection !== this.filterSortDirection) {
+      this.changed = true;
+    }
+
+    return this.changed;
+  }
+
+  changedSortDirection() {
+    if (this.filterSortDirection === 'asc') {
+      this.filterSortDirection = 'desc';
+    } else {
+      this.filterSortDirection = 'asc';
+    }
+
+    this.initSortDirectionIcon();
+  }
+
+  private initSortDirectionIcon() {
+    if (this.filterSortDirection === 'desc') {
+      this.sortIconName = this.iconNameDown;
+    } else {
+      this.sortIconName = this.iconNameUp;
+    }
+  }
+
+  initSearch() {
+    this.taskSearchValues.title = this.filterTitle;
+    this.taskSearchValues.completed = this.filterCompleted;
+    this.taskSearchValues.priorityId = this.filterPriorityId;
+    this.taskSearchValues.sortColumn = this.filterSortColumn;
+    this.taskSearchValues.sortDirection = this.filterSortDirection;
+
+    this.searchAction.emit(this.taskSearchValues);
+
+    this.changed = false;
+  }
+
+  clearSearchValues() {
+    this.filterTitle = '';
+    this.filterCompleted = null;
+    this.filterPriorityId = null;
+    this.filterSortColumn = this.defaultSortColumn;
+    this.filterSortDirection = this.defaultSortDirection;
+  }
 }
