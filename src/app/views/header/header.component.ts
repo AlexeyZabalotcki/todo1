@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {SettingsDialogComponent} from "../../dialog/settings-dialog/settings-dialog.component";
+import {Priority} from "../../model/Priority";
+import {DialogAction} from "../../object/DialogResult";
 
 @Component({
   selector: 'app-header',
@@ -18,6 +20,9 @@ export class HeaderComponent implements OnInit {
   @Output()
   toggleStat = new EventEmitter<boolean>();
 
+  @Output()
+  settingsChanged = new EventEmitter<Priority[]>();
+
   constructor(private dialog: MatDialog) {
   }
 
@@ -25,12 +30,22 @@ export class HeaderComponent implements OnInit {
   }
 
   showSettings() {
+
     const dialogRef = this.dialog.open(SettingsDialogComponent,
       {
         autoFocus: false,
         width: '500px'
       });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result && result.action === DialogAction.SETTINGS_CHANGE) {
+        this.settingsChanged.emit(result.obj);
+        return;
+      }
+    });
   }
+
 
   onToggleStats() {
     this.toggleStat.emit(!this.showStat);

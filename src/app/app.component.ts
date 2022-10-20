@@ -56,10 +56,7 @@ export class AppComponent implements OnInit {
         this.categories = res;
 
         this.selectCategory(this.selectedCategory);
-
       });
-
-
     }));
   }
 
@@ -97,7 +94,6 @@ export class AppComponent implements OnInit {
     this.taskSearchValues.categoryId = category ? category.id : null;
 
     this.searchTasks(this.taskSearchValues);
-
   }
 
   searchTasks(searchTaskValues: TaskSearchValues) {
@@ -146,7 +142,6 @@ export class AppComponent implements OnInit {
       }
       this.updateOverallCounter();
       this.searchTasks(this.taskSearchValues);
-
     });
 
   }
@@ -176,7 +171,6 @@ export class AppComponent implements OnInit {
 
       this.updateOverallCounter();
       this.searchTasks(this.taskSearchValues);
-
     });
   }
 
@@ -192,7 +186,6 @@ export class AppComponent implements OnInit {
     this.taskSearchValues.pageNumber = pageEvent.pageIndex;
 
     this.searchTasks(this.taskSearchValues);
-
   }
 
   fillAllPriorities() {
@@ -237,5 +230,15 @@ export class AppComponent implements OnInit {
     if (this.selectedCategory && this.selectedCategory.id === cat.id) {
       this.fillDashData(cat.completedCount, cat.uncompletedCount);
     }
+  }
+
+  settingsChanged(priorities: Priority[]) {
+    this.priorities = priorities;
+    console.log(priorities);
+    this.searchTasks(this.taskSearchValues);
+  }
+
+  toggleStat(showStat: boolean) {
+    this.showStat = showStat;
   }
 }

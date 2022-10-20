@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category} from "../../model/Category";
 import {EditCategoryDialogComponent} from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {OperType} from "../../dialog/OperType";
 import {CategorySearchValues} from "../../data/dao/search/SearchObjects";
 import {DialogAction} from "../../object/DialogResult";
 
@@ -128,7 +127,7 @@ export class CategoriesComponent implements OnInit {
 
   openEditDialog(category: Category) {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      data: [new Category(category.id, category.title), 'Edit category', OperType.EDIT],
+      data: [new Category(category.id, category.title), 'Edit category'],
       width: '400px'
     });
 
