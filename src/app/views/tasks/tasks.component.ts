@@ -90,9 +90,6 @@ export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
 
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
-  @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
-
-  @ViewChild(MatSort, {static: false}) private sort!: MatSort;
 
   changed = false;
 
@@ -128,7 +125,6 @@ export class TasksComponent implements OnInit {
     this.dataSource.data = this.tasks;
 
   }
-
 
   openAddDialog() {
 
@@ -193,7 +189,6 @@ export class TasksComponent implements OnInit {
 
   }
 
-
   openDeleteDialog(task: Task) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
@@ -215,7 +210,6 @@ export class TasksComponent implements OnInit {
     });
   }
 
-
   onToggleCompleted(task: Task) {
 
     if (task.completed === 0) {
@@ -227,7 +221,6 @@ export class TasksComponent implements OnInit {
     this.updateTask.emit(task);
 
   }
-
 
   getPriorityColor(task: Task) {
 
@@ -247,9 +240,6 @@ export class TasksComponent implements OnInit {
     this.paging.emit(pageEvent);
   }
 
-  openAddTaskDialog() {
-
-  }
 
   onToggleSearch() {
     this.toggleSearch.emit(!this.showSearch);

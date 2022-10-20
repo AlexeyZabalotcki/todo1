@@ -86,11 +86,15 @@ export class AppComponent implements OnInit {
 
 
   selectCategory(category: Category) {
+    if (category) {
+      this.fillDashData(category.completedCount, category.uncompletedCount);
+    } else {
+      this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal);
+    }
 
     this.taskSearchValues.pageNumber = 0;
 
     this.selectedCategory = category;
-
     this.taskSearchValues.categoryId = category ? category.id : null;
 
     this.searchTasks(this.taskSearchValues);
