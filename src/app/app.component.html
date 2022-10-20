@@ -20,10 +20,14 @@
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
          data-scroll="true">
-      <!-- <app-header
-         [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
-         (toggleStat)="toggleStat($event)"
-         [showStat]="showStat"></app-header>-->
+      <app-header
+        [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
+        [showStat]="showStat"
+
+        (toggleStat)="toggleStat($event)"
+        (settingsChanged)="settingsChanged($event)"
+
+      ></app-header>
     </nav>
     <!-- End Navbar -->
     <div class="content">
@@ -56,10 +60,8 @@
                      (paging)="paging($event)"
                      (toggleSearch)="toggleSearch($event)"
           >
-
           </app-tasks>
           <div class="col-12">
-
           </div>
         </div>
       </div>

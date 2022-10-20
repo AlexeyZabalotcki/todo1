@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {OperType} from "../OperType";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {Priority} from "../../model/Priority";
+import {DialogAction, DialogResult} from "../../object/DialogResult";
 
 @Component({
   selector: 'app-edit-priority-dialog',
@@ -9,27 +10,36 @@ import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component
   styleUrls: ['./edit-priority-dialog.component.css']
 })
 export class EditPriorityDialogComponent implements OnInit {
-  dialogTitle: string;
-  priorityTitle: string;
-  private operType: OperType;
 
   constructor(
     private dialogRef: MatDialogRef<EditPriorityDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: [string, string, OperType],
-    private dialog: MatDialog) {
+    @Inject(MAT_DIALOG_DATA) private data: [Priority, string],
+    private dialog: MatDialog
+  ) {
   }
 
-  ngOnInit(): void {
-    this.priorityTitle = this.data[0];
+  dialogTitle: string;
+  priority: Priority;
+  canDelete = false;
+
+  ngOnInit() {
+    this.priority = this.data[0];
     this.dialogTitle = this.data[1];
-    this.operType = this.data[2];
+
+    if (this.priority && this.priority.id > 0) {
+      this.canDelete = true;
+    }
   }
 
-  canDelete() {
-    return this.operType == OperType.EDIT;
+  confirm(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.priority));
   }
 
-  delete() {
+  cancel(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
+  }
+
+  delete(): void {
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
@@ -41,17 +51,14 @@ export class EditPriorityDialogComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dialogRef.close('delete');
+
+      if (!(result)) {
+        return;
+      }
+
+      if (result.action === DialogAction.OK) {
+        this.dialogRef.close(new DialogResult(DialogAction.DELETE));
       }
     });
-  }
-
-  onCancel() {
-    this.dialogRef.close(false);
-  }
-
-  onConfirm() {
-    this.dialogRef.close(this.priorityTitle)
   }
 }

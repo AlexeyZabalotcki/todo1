@@ -6,21 +6,24 @@
     <input
       #inputTitle
 
-      maxInput maxlength="20"
+      matInput maxlength="20"
 
-      [(ngModel)]="priorityTitle"
-      (keydown.enter)="onConfirm()"/>
+      [(ngModel)]="priority.title"
+      (keydown.enter)="confirm()"/>
 
     <button
-      *ngIf="priorityTitle.trim().length > 0"
+      *ngIf="priority && priority.title.trim().length > 0"
 
-      class="clear-icon size1"
+      class="clear-icon"
       mat-button matSuffix mat-icon-button aria-label="Clear"
 
-      (click)="priorityTitle= ''">
+      (click)="priority.title = ''">
       <mat-icon>clear</mat-icon>
     </button>
   </mat-form-field>
+
+  <span [(colorPicker)]="priority.color" [style.background]="priority.color" class="color-circle"></span>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>
@@ -29,12 +32,12 @@
 
     <button
       mat-raised-button color="primary"
-      (click)="onConfirm()"
+      (click)="confirm()"
       [disabled]="inputTitle.value.trim().length==0">
       Save
     </button>
 
-    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button (click)="cancel()">Cancel</button>
 
   </div>
 
@@ -42,9 +45,9 @@
 
     <button class="red"
             mat-button
-            *ngIf="canDelete()" (click)="delete()">
-      Delete
+            *ngIf="canDelete" (click)="delete()">
     </button>
+    <button mat-raised-button (click)="delete()">Delete</button>
   </div>
 
 </mat-dialog-actions>

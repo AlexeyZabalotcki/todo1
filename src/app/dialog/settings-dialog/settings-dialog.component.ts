@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Priority} from "../../model/Priority";
 import {MatDialogRef} from "@angular/material/dialog";
+import {PriorityService} from "../../data/dao/impl/PriorityService";
+import {DialogAction, DialogResult} from "../../object/DialogResult";
 
 @Component({
   selector: 'app-settings-dialog',
@@ -10,29 +12,60 @@ import {MatDialogRef} from "@angular/material/dialog";
 export class SettingsDialogComponent implements OnInit {
 
   priorities: Priority[];
+  settingsChanged = false;
 
   constructor(
     private dialogRef: MatDialogRef<SettingsDialogComponent>,
+    private priorityService: PriorityService
   ) {
   }
 
-  ngOnInit(): void {
-    // this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
+
+  ngOnInit() {
+    this.priorityService.findAll().subscribe(priorities => this.priorities = priorities);
   }
 
-  onClose() {
-    this.dialogRef.close(false);
+  close(): void {
+    if (this.settingsChanged) {
+      this.dialogRef.close(new DialogResult(DialogAction.SETTINGS_CHANGE, this.priorities));
+    } else {
+      this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
+    }
   }
 
-  onAddPriority(priority: Priority) {
-    // this.dataHandler.addPriority(priority).subscribe();
+  addPriority(priority: Priority): void {
+
+    this.settingsChanged = true;
+
+    this.priorityService.add(priority).subscribe(result => {
+      this.priorities.push(result);
+    });
   }
 
-  onDeletePriority(priority: Priority) {
-    // this.dataHandler.deletePriority(priority.id).subscribe();
+  deletePriority(priority: Priority): void {
+
+    this.settingsChanged = true;
+
+    this.priorityService.delete(priority.id).subscribe(() => {
+
+        this.priorities.splice(this.getPriorityIndex(priority), 1);
+      }
+    );
   }
 
-  onUpdatePriority(priority: Priority) {
-    // this.dataHandler.updatePriority(priority).subscribe();
+  updatePriority(priority: Priority): void {
+
+    this.settingsChanged = true;
+
+    this.priorityService.update(priority).subscribe(() => {
+
+        this.priorities[this.getPriorityIndex(priority)] = priority;
+      }
+    );
+  }
+
+  getPriorityIndex(priority: Priority): number {
+    const tmpPriority = this.priorities.find(t => t.id === priority.id);
+    return this.priorities.indexOf(tmpPriority);
   }
 }
